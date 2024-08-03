@@ -1,0 +1,39 @@
+#main {
+    height: 100vh;
+    width: 100vw;
+
+    /* https://stackoverflow.com/questions/54250835/display-sunset-effect-with-gradients-above-background-image-in-body */
+    background-image: url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/left.png),
+url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/right.png),
+url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/sunsetbgbottom.png),
+-webkit-linear-gradient(bottom, rgb(255,203,112) 0%, rgb(107,138,169) 30%, rgb(1,44,87) 100%);
+}
+
+#controls {
+    height: 81px;
+    width: 240px;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+}
+.controlButton {
+    height: 70px;
+    width: 70px;
+
+    background-color: white;
+}
+
+
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

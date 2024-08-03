@@ -1,0 +1,13 @@
+<div id="main">
+  <canvas id="canvas"></canvas>
+
+  <div id="controls">
+    <button class="controlButton"><span style="transform: rotate(90deg);">V</span></button>
+    <button class="controlButton" (click)="this.GoToHistory()">📋</button>
+    <button class="controlButton" (click)="this.NewTree()">+</button>
+  </div>
+
+  <h1 id="instruction" style="position: absolute; top: 100px; left: 0px; right: 0px; color: white; text-align: center; transition: 200ms opacity; opacity: 0"></h1>
+
+  <app-popup *ngIf="this.popupOpen" (ClosePopup)="this.ClosePopupHandler();"></app-popup>
+</div>

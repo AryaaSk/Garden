@@ -1,0 +1,43 @@
+<h1>{{this.category.id}}</h1>
+
+<button (click)="this.editingHabits = !this.editingHabits">
+    Edit Habits
+</button>
+
+<div *ngIf="this.editingHabits == false">
+    <div *ngIf="this.category.habits.length > 0">
+        Current Habit to Complete
+        <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
+        <button (click)="this.CompleteHabit()">
+            Done
+        </button>
+    </div>
+    
+    <!-- Else -->
+    <div *ngIf="this.category.habits.length == 0">
+        There aren't any habits within this category yet
+    </div>
+
+    Hydration Progress
+    <progress value="{{this.category.tree.hydration}}" max="100"></progress>
+    <br>
+
+    Growth Level: {{this.category.tree.growthLevel}}
+    <br>
+
+    <button (click)="this.DeleteCategory()">Delete Category</button>
+</div>
+
+<div *ngIf="this.editingHabits == true">
+    <!-- create a list of habits -->
+    <div *ngFor="let habit of this.category.habits">
+        {{habit.id}}
+        <button (click)="this.DeleteHabit(habit.id)">
+            Delete
+        </button>
+    </div>
+
+    <button (click)="this.AddHabit()">
+        Add Habit
+    </button>
+</div>

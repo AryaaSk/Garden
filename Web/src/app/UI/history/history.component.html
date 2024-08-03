@@ -1,0 +1,19 @@
+<table>
+    <tr>
+        <th></th>
+        <th *ngFor="let categoryID of this.categoryIDs">
+            {{categoryID}}
+        </th>
+    </tr>
+
+    <tr *ngFor="let dayIndex of this.dayLog | keyvalue">
+        <!-- Display logs for each category in same order as headings -->
+        <td>{{dayIndex.key}}</td>
+        <td *ngFor="let categoryID of this.categoryIDs">
+            <div *ngFor="let habit of dayIndex.value[categoryID]">
+                {{habit.habitID}}: {{habit.description}}
+            </div>
+        </td>
+    </tr>
+
+</table>
