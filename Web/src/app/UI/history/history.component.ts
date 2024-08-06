@@ -10,6 +10,7 @@ export class HistoryComponent implements OnInit {
 
   constructor(private data: DataServiceService) { }
 
+  dayOffset = 0;
   dayLog: { [dayIndex: number]: { [categoryID: string]: { habitID: string, description: string }[] } } = {};
   categoryIDs: string[] = [];
 
@@ -40,6 +41,15 @@ export class HistoryComponent implements OnInit {
     for (const category of this.data.userData.categories) {
       this.categoryIDs.push(category.id);
     }
+
+    if (this.data.userData.history.length > 0) {
+      //set offset to first day's key - 1 (so that logs start at day 1)
+      const firstDayIndex = Number(Object.keys(this.dayLog)[0]);
+      this.dayOffset = firstDayIndex - 1;
+    }
   }
 
+  Number(data: string) {
+    return Number(data);
+  }
 }

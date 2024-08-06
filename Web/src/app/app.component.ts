@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import * as THREE from 'three';
 import { DataServiceService, Category, Tree, Habit, Log, UserData } from './data-service.service';
 import { Router } from '@angular/router';
+import { CommunicationService } from './communication.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,18 @@ export class AppComponent {
   renderer!: THREE.WebGLRenderer;
   raycaster!: THREE.Raycaster;
 
-  constructor(private data: DataServiceService, private router: Router) {}
+  constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router) {}
+
+  ngOnInit() {
+    this.communication.completedHabitEvent.subscribe((data) => {
+      this.CompleteHabit(data.categoryID, data.description);
+    });
+
+    this.communication.deleteCategoryEvent.subscribe((categoryID) => {
+      console.log('recived event');
+      this.DeleteCategory(categoryID);
+    });
+  }
 
   ngAfterViewInit() {
     this.InitTHREE();
@@ -217,12 +229,12 @@ export class AppComponent {
     }
   }
   
-  //Managing popup window
+  //Managing popup window and routes
   popupOpen = false;
   ClosePopupHandler() {
     this.popupOpen = false;
     this.router.navigate(['/']);
-    this.InitTrees(this.data.userData.categories);
+    //this.InitTrees(this.data.userData.categories);
   }
 
   GoToCategory(id: string) {
@@ -230,9 +242,62 @@ export class AppComponent {
     this.popupOpen = true;
     this.router.navigate(['/category'], { queryParams: { categoryID: id } });
   }
+  async CompleteHabit(categoryID: string, description: string) {
+    //close popup, show watering animation, execute data.CompleteHabit and possibly show tree growth animation
+    this.ClosePopupHandler();
+
+    //watering animation; need to get category tree's position
+    const position = this.data.userData.categories[this.data.GetCategoryIndex(categoryID)].tree.position;
+    await this.Rain(position);
+
+    this.data.CompleteHabit(categoryID, description);
+
+    //show tree growth animation if possible
+
+    this.InitTrees(this.data.userData.categories);
+  }
+  DeleteCategory(categoryID: string) {
+    this.ClosePopupHandler();
+
+    //get tree position and show tree death animation
+    this.data.DeleteCategory(categoryID);
+    this.InitTrees(this.data.userData.categories); //temporary solution while there is no animation for removing the tree
+  }
 
   GoToHistory() {
     this.popupOpen = true;
     this.router.navigate(['/history'])
+  }
+
+
+
+
+
+
+  //Animations
+  Wait(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(undefined);
+      }, ms);
+    })
+  }
+
+  Rain(position: { x: number, z: number }) {
+    return new Promise(async (resolve) => {
+      //very simple rain animation: just a block of 'water' falling from y = 50 to y = 0
+      const water = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshStandardMaterial({ color: 0x13a3f0 }));
+      water.position.x = position.x;
+      water.position.y = 50;
+      water.position.z = position.z;
+      this.scene.add(water);
+
+      while (water.position.y > 0) {
+        water.position.y -= 1;
+        await this.Wait(10);
+      }
+
+      resolve(undefined);
+    })
   }
 }

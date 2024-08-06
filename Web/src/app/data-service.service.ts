@@ -80,6 +80,7 @@ export class DataServiceService {
 
     this.userData = JSON.parse(json);
     this.DehydrateTrees();
+    console.log(this.userData);
   }
 
   DehydrateTrees() {
@@ -223,6 +224,7 @@ export class DataServiceService {
   CompleteHabit(categoryID: string, description: string) {
     try {
       const category = this.userData.categories[this.GetCategoryIndex(categoryID)];
+      const habitID = category.habits[category.currentHabitIndex].id;
       
       const hydrationReward = category.habits[category.currentHabitIndex].hydrationReward;
 
@@ -238,7 +240,7 @@ export class DataServiceService {
 
       //create a log
       const epochTime = Date.now();
-      const log: Log = { epochTime: epochTime, categoryID: category.id, habitID: category.habits[category.currentHabitIndex].id, description: description };
+      const log: Log = { epochTime: epochTime, categoryID: category.id, habitID: habitID, description: description };
       this.userData.history.push(log);
       this.SaveData();
     }

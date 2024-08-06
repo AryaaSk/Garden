@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Category, DataServiceService } from 'src/app/data-service.service';
+import { CommunicationService } from 'src/app/communication.service';
 
 @Component({
   selector: 'app-category-viewer',
@@ -9,7 +10,7 @@ import { Category, DataServiceService } from 'src/app/data-service.service';
 })
 export class CategoryViewerComponent implements OnInit {
 
-  constructor(private data: DataServiceService, private route: ActivatedRoute) { }
+  constructor(private data: DataServiceService, private communication: CommunicationService, private route: ActivatedRoute) { }
 
   category!: Category;
   editingHabits = false;
@@ -28,9 +29,8 @@ export class CategoryViewerComponent implements OnInit {
   }
 
   DeleteCategory() {
-    this.data.DeleteCategory(this.category.id);
-    //hide popup, for now will just reload page
-    location.reload();
+    //handle category deletion from main app component (to show tree deletion animation)
+    this.communication.deleteCategoryEvent.emit(this.category.id);
   }
 
   AddHabit() {
@@ -51,6 +51,7 @@ export class CategoryViewerComponent implements OnInit {
       return;
     }
 
-    this.data.CompleteHabit(this.category.id, description);
+    //execute complete habit flow from main app component
+    this.communication.completedHabitEvent.emit({ categoryID: this.category.id, description: description });
   }
 }
