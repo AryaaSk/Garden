@@ -39,15 +39,17 @@
     </div>
 
     <div *ngIf="this.editingHabits == true" class="mt-5" style="display: grid; grid-template-rows: auto max-content;">
-        <div>
+        <div cdkDropList [cdkDropListData]="this.category.habits"  (cdkDropListDropped)="DroppedHabit($event)">
             <!-- create a list of habits -->
-            <div *ngFor="let habit of this.category.habits" class="h-14 w-full mb-5" style="display: grid; grid-template-columns: auto max-content;">
+            <div cdkDrag *ngFor="let habit of this.category.habits" class="h-14 w-full mb-5" style="display: grid; grid-template-columns: auto max-content;">
                 <div class="h-full pl-3 rounded-lg bg-gray-200 flex items-center" style="width: calc(100% - 0.5rem);">
                     {{habit.id}}
                 </div>
                 <button class="btn btn-error rounded-md px-3 items-center justify-center w-12 h-14" (click)="this.DeleteHabit(habit.id)">
                     <img class="w-6 h-6" src="/assets/trash.svg" alt="Delete Habit">
                 </button>
+
+                <div *cdkDragPlaceholder class="h-14 w-full mb-5"></div>
             </div>
             
             <button class="btn w-full h-5 text-lg" (click)="this.AddHabit()">

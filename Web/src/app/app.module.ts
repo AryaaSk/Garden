@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { CategoryViewerComponent } from './UI/category-viewer/category-viewer.component';
 import { HistoryComponent } from './UI/history/history.component';
 
+import { DragDropModule } from '@angular/cdk/drag-drop'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -14,7 +16,8 @@ import { HistoryComponent } from './UI/history/history.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

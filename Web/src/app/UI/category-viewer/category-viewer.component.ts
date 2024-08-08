@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Category, DataServiceService } from 'src/app/data-service.service';
+import { Category, Habit, DataServiceService } from 'src/app/data-service.service';
 import { CommunicationService } from 'src/app/communication.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-category-viewer',
@@ -48,6 +49,10 @@ export class CategoryViewerComponent implements OnInit {
   }
   DeleteHabit(habitID: string) {
     this.data.DeleteHabit(this.category.id, habitID);
+  }
+  DroppedHabit(event: CdkDragDrop<Habit[]>) {
+    console.log('here')
+    moveItemInArray(this.category.habits, event.previousIndex, event.currentIndex);
   }
 
   CompleteHabit() {

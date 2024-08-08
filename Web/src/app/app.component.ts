@@ -240,6 +240,8 @@ export class AppComponent {
   //Managing popup window and routes
   OpenPopup() {
     const popup = document.getElementById("popup")! as HTMLDialogElement;
+
+    //@ts-ignore (angular typescript version is out of sync with local ts version, so angular doesn't know about popup.open attribute)
     popup.open = true;
   }
   ClosePopupHandler() { //executed whenever dialog box switches from open to closed (nothing)
