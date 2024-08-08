@@ -51,8 +51,8 @@ export class CategoryViewerComponent implements OnInit {
     this.data.DeleteHabit(this.category.id, habitID);
   }
   DroppedHabit(event: CdkDragDrop<Habit[]>) {
-    console.log('here')
     moveItemInArray(this.category.habits, event.previousIndex, event.currentIndex);
+    this.data.SaveData();
   }
 
   CompleteHabit() {

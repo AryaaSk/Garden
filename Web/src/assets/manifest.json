@@ -1,0 +1,9 @@
+{
+    "name": "Garden",
+    "short_name": "Garden",
+    "description": "A habit tracker to make you complete ALL your habits.",
+    "icons": [],
+    "start_url": "./",
+    "scope": ".",
+    "display": "fullscreen"
+  }

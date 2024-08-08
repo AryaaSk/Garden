@@ -40,8 +40,6 @@ export class AppComponent {
     this.InitTreeListeners();
     this.HideInstruction();
 
-    this.GoToHistory();
-
     const popupDialogElement = document.getElementById("popup")!;
     popupDialogElement.addEventListener('close', () => {
       this.ClosePopupHandler();
