@@ -39,6 +39,11 @@ export class AppComponent {
 
     this.InitTreeListeners();
 
+    const popupDialogElement = document.getElementById("popup")!;
+    popupDialogElement.addEventListener('close', () => {
+      this.ClosePopupHandler();
+    })
+
     const animate = () => {
       this.renderer.render(this.scene, this.camera);
     }
@@ -77,7 +82,7 @@ export class AppComponent {
 
     //Setting up position of plane and camera
     this.camera.position.y = 20;
-    this.camera.position.x = 15;
+    this.camera.position.x = 16;
     this.camera.position.z = 30;
     
     this.camera.rotation.x = -0.3;
@@ -230,16 +235,17 @@ export class AppComponent {
   }
   
   //Managing popup window and routes
-  popupOpen = false;
-  ClosePopupHandler() {
-    this.popupOpen = false;
+  OpenPopup() {
+    const popup = document.getElementById("popup")! as HTMLDialogElement;
+    popup.open = true;
+  }
+  ClosePopupHandler() { //executed whenever dialog box switches from open to closed (nothing)
     this.router.navigate(['/']);
     //this.InitTrees(this.data.userData.categories);
   }
 
   GoToCategory(id: string) {
     //show popup and route to category screen with given category ID
-    this.popupOpen = true;
     this.router.navigate(['/category'], { queryParams: { categoryID: id } });
   }
   async CompleteHabit(categoryID: string, description: string) {
@@ -265,7 +271,6 @@ export class AppComponent {
   }
 
   GoToHistory() {
-    this.popupOpen = true;
     this.router.navigate(['/history'])
   }
 
