@@ -4,8 +4,6 @@
 @tailwind utilities;
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
     /* https://stackoverflow.com/questions/54250835/display-sunset-effect-with-gradients-above-background-image-in-body */
 
     background-image: url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/left.png),

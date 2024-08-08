@@ -1,43 +1,62 @@
-<h1>{{this.category.id}}</h1>
-
-<button (click)="this.editingHabits = !this.editingHabits">
-    Edit Habits
-</button>
-
-<div *ngIf="this.editingHabits == false">
-    <div *ngIf="this.category.habits.length > 0">
-        Current Habit to Complete
-        <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
-        <button (click)="this.CompleteHabit()">
-            Done
+<div class="w-full h-full" style="display: grid; grid-template-rows: max-content auto;">
+    <div class="w-full h-full" style="display: grid; grid-template-columns: auto max-content;">
+        <div class="w-full h-full" style="display: flex; align-items: center;">
+            <h1 class="font-bold text-3xl">{{this.category.id}}</h1>
+        </div>
+    
+        <button class="btn rounded-md px-3 items-center justify-center w-12 h-15" (click)="this.editingHabits = !this.editingHabits">
+            <img class="w-6 h-6" src="/assets/list.svg" alt="Edit">
         </button>
     </div>
     
-    <!-- Else -->
-    <div *ngIf="this.category.habits.length == 0">
-        There aren't any habits within this category yet
+    <div *ngIf="this.editingHabits == false" class="mt-5" style="position: relative; display: grid; grid-template-columns: 80% 20%;">
+        <div class="w-full h-full">
+            <div *ngIf="this.category.habits.length > 0">
+                Current Habit to Complete
+                <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
+                <button (click)="this.CompleteHabit()">
+                    Done
+                </button>
+            </div>
+            
+            <!-- Else -->
+            <div *ngIf="this.category.habits.length == 0">
+                There aren't any habits within this category yet.
+                <br> <br>
+                Click the edit button with the 3 lines to get started.
+            </div>
+        </div>
+
+        <div class="w-full h-full mx-2" style="display: grid; grid-template-rows: auto max-content; place-items: center;">
+            <div class="w-full h-full relative bg-blue-400 rounded-md">
+                <div class="w-full absolute bottom-0 left-0 right-0 bg-blue-500 rounded-bl-md rounded-br-md" [style.height]="String(this.category.tree.hydration) + '%'"></div>
+            </div>
+
+            <div class="w-full h-16 mt-3 bg-green-500 text-5xl font-bold text-white flex justify-center items-center">
+                {{this.category.tree.growthLevel}}
+            </div>
+        </div>
     </div>
 
-    Hydration Progress
-    <progress value="{{this.category.tree.hydration}}" max="100"></progress>
-    <br>
+    <div *ngIf="this.editingHabits == true" class="mt-5" style="display: grid; grid-template-rows: auto max-content;">
+        <div>
+            <!-- create a list of habits -->
+            <div *ngFor="let habit of this.category.habits" class="h-14 w-full mb-5" style="display: grid; grid-template-columns: auto max-content;">
+                <div class="h-full pl-3 rounded-lg bg-gray-200 flex items-center" style="width: calc(100% - 0.5rem);">
+                    {{habit.id}}
+                </div>
+                <button class="btn btn-error rounded-md px-3 items-center justify-center w-12 h-14" (click)="this.DeleteHabit(habit.id)">
+                    <img class="w-6 h-6" src="/assets/trash.svg" alt="Delete Habit">
+                </button>
+            </div>
+            
+            <button class="btn w-full h-5 text-lg" (click)="this.AddHabit()">
+                Add Habit
+            </button>
+        </div>
 
-    Growth Level: {{this.category.tree.growthLevel}}
-    <br>
-
-    <button (click)="this.DeleteCategory()">Delete Category</button>
-</div>
-
-<div *ngIf="this.editingHabits == true">
-    <!-- create a list of habits -->
-    <div *ngFor="let habit of this.category.habits">
-        {{habit.id}}
-        <button (click)="this.DeleteHabit(habit.id)">
-            Delete
+        <button class="btn btn-error w-full h-5 text-lg text-white" (click)="this.DeleteCategory()">
+            Delete Category
         </button>
     </div>
-
-    <button (click)="this.AddHabit()">
-        Add Habit
-    </button>
 </div>

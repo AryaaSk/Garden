@@ -38,6 +38,9 @@ export class AppComponent {
     this.InitTrees(this.data.userData.categories);
 
     this.InitTreeListeners();
+    this.HideInstruction();
+    
+    this.GoToCategory("test");
 
     const popupDialogElement = document.getElementById("popup")!;
     popupDialogElement.addEventListener('close', () => {

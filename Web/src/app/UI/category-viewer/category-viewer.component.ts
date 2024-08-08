@@ -13,7 +13,7 @@ export class CategoryViewerComponent implements OnInit {
   constructor(private data: DataServiceService, private communication: CommunicationService, private route: ActivatedRoute) { }
 
   category!: Category;
-  editingHabits = false;
+  editingHabits = true;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -30,6 +30,11 @@ export class CategoryViewerComponent implements OnInit {
 
   DeleteCategory() {
     //handle category deletion from main app component (to show tree deletion animation)
+    const confirm = window.confirm("Are you sure you want to delete this category?");
+    if (confirm == false) {
+      return;
+    }
+
     this.communication.deleteCategoryEvent.emit(this.category.id);
   }
 
@@ -53,5 +58,9 @@ export class CategoryViewerComponent implements OnInit {
 
     //execute complete habit flow from main app component
     this.communication.completedHabitEvent.emit({ categoryID: this.category.id, description: description });
+  }
+
+  String(number: number) {
+    return String(number)
   }
 }
