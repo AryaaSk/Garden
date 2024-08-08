@@ -246,6 +246,7 @@ export class AppComponent {
 
   GoToCategory(id: string) {
     //show popup and route to category screen with given category ID
+    this.OpenPopup();
     this.router.navigate(['/category'], { queryParams: { categoryID: id } });
   }
   async CompleteHabit(categoryID: string, description: string) {
@@ -271,6 +272,7 @@ export class AppComponent {
   }
 
   GoToHistory() {
+    this.OpenPopup();
     this.router.navigate(['/history'])
   }
 

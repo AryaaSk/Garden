@@ -5,7 +5,7 @@
     <button class="btn btn-primary rounded-md mx-2 px-3 items-center justify-center">
       <img class="w-6 h-6" src="/assets/share.svg" alt="Share">
     </button>
-    <button class="btn btn-primary rounded-md mx-2 px-3 items-center justify-center" onclick="popup.showModal()" (click)="this.GoToHistory()">
+    <button class="btn btn-primary rounded-md mx-2 px-3 items-center justify-center" (click)="this.GoToHistory()">
       <img class="w-6 h-6" src="/assets/clipboard.svg" alt="Progress">
     </button>
     <button class="btn btn-primary rounded-md mx-2 px-3 items-center justify-center" (click)="this.NewTree()">
@@ -16,7 +16,7 @@
   <h1 id="instruction" style="position: absolute; top: 120px; left: 0px; right: 0px; color: white; text-align: center; transition: 200ms;">Place the tree somewhere</h1>
 
   <dialog id="popup" class="modal">
-    <div class="modal-box">
+    <div class="modal-box h-3/4">
       <router-outlet></router-outlet>
     </div>
 
