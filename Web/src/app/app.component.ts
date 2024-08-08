@@ -39,8 +39,8 @@ export class AppComponent {
 
     this.InitTreeListeners();
     this.HideInstruction();
-    
-    this.GoToCategory("test");
+
+    this.GoToHistory();
 
     const popupDialogElement = document.getElementById("popup")!;
     popupDialogElement.addEventListener('close', () => {
@@ -207,6 +207,9 @@ export class AppComponent {
         try {
           this.data.AddCategory(name, { x: x, z: z });
           this.InitTrees(this.data.userData.categories);
+
+          //open category viewer for this tree
+          this.GoToCategory(name);
         }
         catch (error) {
           console.log(error); //user may try to place tree in same position as another tree
@@ -245,6 +248,8 @@ export class AppComponent {
     popup.open = true;
   }
   ClosePopupHandler() { //executed whenever dialog box switches from open to closed (nothing)
+    //@ts-ignore
+    popup.open = false;
     this.router.navigate(['/']);
     //this.InitTrees(this.data.userData.categories);
   }

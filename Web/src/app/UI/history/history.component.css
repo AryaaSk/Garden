@@ -1,0 +1,17 @@
+table {
+    border-collapse:separate;
+    border:solid black 1px;
+}
+
+td, th {
+    border-left:solid black 1px;
+    border-top:solid black 1px;
+}
+
+th {
+    border-top: none;
+}
+
+td:first-child, th:first-child {
+     border-left: none;
+}

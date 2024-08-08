@@ -14,7 +14,7 @@ export class CategoryViewerComponent implements OnInit {
   constructor(private data: DataServiceService, private communication: CommunicationService, private route: ActivatedRoute) { }
 
   category!: Category;
-  editingHabits = true;
+  editingHabits = false;
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {

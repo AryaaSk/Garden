@@ -10,24 +10,26 @@
     </div>
     
     <div *ngIf="this.editingHabits == false" class="mt-5" style="position: relative; display: grid; grid-template-columns: 80% 20%;">
-        <div class="w-full h-full">
-            <div *ngIf="this.category.habits.length > 0">
-                Current Habit to Complete
-                <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
-                <button (click)="this.CompleteHabit()">
+        <div class="w-full h-full grid place-items-center">
+            <div *ngIf="this.category.habits.length > 0" class="w-full h-full pr-3" style="display: grid; grid-template-rows: auto max-content;">
+                <div class="w-full h-full text-5xl font-bold bg-slate-100 grid place-content-center">
+                    <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
+                </div>
+
+                <button class="btn w-full h-32 mt-5 text-3xl" (click)="this.CompleteHabit()">
                     Done
                 </button>
             </div>
             
             <!-- Else -->
-            <div *ngIf="this.category.habits.length == 0">
+            <div *ngIf="this.category.habits.length == 0" class="w-full h-full">
                 There aren't any habits within this category yet.
                 <br> <br>
-                Click the edit button with the 3 lines to get started.
+                Click the edit button with the 3 lines to get started!
             </div>
         </div>
 
-        <div class="w-full h-full mx-2" style="display: grid; grid-template-rows: auto max-content; place-items: center;">
+        <div class="w-full h-full pl-2" style="display: grid; grid-template-rows: auto max-content; place-items: center;">
             <div class="w-full h-full relative bg-blue-400 rounded-md">
                 <div class="w-full absolute bottom-0 left-0 right-0 bg-blue-500 rounded-bl-md rounded-br-md" [style.height]="String(this.category.tree.hydration) + '%'"></div>
             </div>
