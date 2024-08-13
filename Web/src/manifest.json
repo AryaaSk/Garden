@@ -1,0 +1,15 @@
+{
+    "name": "Garden",
+    "short_name": "Garden",
+    "description": "A habit tracker to make you complete ALL your habits.",
+    "icons": [
+      {
+        "src": "assets/Icon.png",
+        "sizes": "1024x1024",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "./",
+    "scope": ".",
+    "display": "fullscreen"
+}
