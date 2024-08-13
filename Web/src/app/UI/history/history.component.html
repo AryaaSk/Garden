@@ -1,5 +1,28 @@
 <!-- Required to ensure right margin is still accounted for scrolling entire view to table's right border -->
-<div style="display: grid; grid-template-columns: auto;">
+<h1 class="text-6xl font-bold mb-5">
+    Progress
+</h1>
+
+<div class="mb-5">
+
+    <div *ngIf="this.goals.length == 0" class="mb-3">
+        You don't have any goals at the moment. Add some to get on track!
+    </div>
+    <div *ngFor="let goal of this.goals; index as i" style="display: grid; grid-template-columns: max-content auto max-content;" class="mb-3">
+        <input type="checkbox" checked="{{goal.complete ? 'checked' : ''}}" (click)="this.FlipGoal(i)" class="checkbox checkbox-success mr-2" />
+        <div class="w-auto label-text">{{goal.deliverable}}</div>
+        <div class="w-max h-max flex items-center">
+            <button style="color: red" (click)="this.DeleteGoal(i)">-</button>
+        </div>
+    </div>
+
+    <div class="btn" (click)="AddGoal()">
+        Add Goal
+    </div>
+</div>
+
+
+<div style="display: grid; grid-template-columns: auto; overflow: auto;">
     <table class="table mr-6 rounded-xl">
         <tr>
             <th></th>

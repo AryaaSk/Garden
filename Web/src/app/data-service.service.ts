@@ -41,9 +41,17 @@ export interface Log {
 
 
 
+export interface Goal {
+  deliverable: string;
+  complete: boolean;
+}
+
+
+
 export interface UserData {
   categories: Category[];
-  history: Log[]; //logs will be added in chronological order
+  history: Log[]; //logs and iterations will be added in chronological order
+  goals: Goal[]
 }
 
 
@@ -67,7 +75,7 @@ export class DataServiceService {
   }
 
   GenerateDefaultData(): UserData {
-    return { categories: [], history: [] };
+    return { categories: [], history: [], goals: [] };
   }
   RetrieveData() {
     //check local storage for user data; if not present then generate some fresh user data
@@ -79,8 +87,16 @@ export class DataServiceService {
     };
 
     this.userData = JSON.parse(json);
+
+    //MIGRATIONS
+    //added goals attribute
+    if (this.userData.goals == undefined) {
+      this.userData.goals = [];
+      console.log("Migrated to new data structure; added goals attribute")
+    }
+
     this.DehydrateTrees();
-    console.log(this.userData);
+    this.SaveData();
   }
 
   DehydrateTrees() {
@@ -121,6 +137,12 @@ export class DataServiceService {
   RoundToNearestMultiple(value: number, n: number) {
     if (n === 0) return value;
     return Math.round(value / n) * n;
+  }
+  RoundPositionToNearestGridCell(x: number, z: number) {
+    x -= 2.5; z -= 2.5;
+    x = this.RoundToNearestMultiple(x, 5); z = this.RoundToNearestMultiple(z, 5);
+    x += 2.5; z += 2.5;
+    return [x, z];
   }
   AddCategory(id: string, treePosition: { x: number, z: number }) {
     //go through all categories and check each tree's position
@@ -247,5 +269,30 @@ export class DataServiceService {
     catch (categoryError) {
       console.log(categoryError);
     }
+  }
+
+
+
+  AddGoal(deliverable: string) {
+    this.userData.goals.push({ deliverable: deliverable, complete: false });
+    this.SaveData();
+  }
+  FlipGoal(index: number) {
+    if (index < 0 || index >= this.userData.goals.length) {
+      console.error("Goal index provided is out of range");
+      return;
+    }
+
+    this.userData.goals[index].complete = !this.userData.goals[index].complete;
+    this.SaveData();
+  }
+  DeleteGoal(index: number) {
+    if (index < 0 || index >= this.userData.goals.length) {
+      console.error("Goal index provided is out of range");
+      return;
+    }
+
+    this.userData.goals.splice(index, 1);
+    this.SaveData();
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataServiceService } from 'src/app/data-service.service';
+import { DataServiceService, Goal } from 'src/app/data-service.service';
 
 @Component({
   selector: 'app-history',
@@ -13,6 +13,8 @@ export class HistoryComponent implements OnInit {
   dayOffset = 0;
   dayLog: { [dayIndex: number]: { [categoryID: string]: { habitID: string, description: string }[] } } = {};
   categoryIDs: string[] = [];
+
+  goals: Goal[] = [];
 
   ngOnInit(): void {
     //process logs into table format
@@ -47,9 +49,26 @@ export class HistoryComponent implements OnInit {
       const firstDayIndex = Number(Object.keys(this.dayLog)[0]);
       this.dayOffset = firstDayIndex - 1;
     }
+
+    //link this.goals to data.userData.goals by reference
+    this.goals = this.data.userData.goals;
   }
 
   Number(data: string) {
     return Number(data);
+  }
+
+  AddGoal() {
+    const deliverable = prompt("What is your goal");
+    if (deliverable == undefined || deliverable.replace(" ", "") == "") {
+      return;
+    }
+    this.data.AddGoal(deliverable);
+  }
+  FlipGoal(goalIndex: number) {
+    this.data.FlipGoal(goalIndex);
+  }
+  DeleteGoal(goalIndex: number) {
+    this.data.DeleteGoal(goalIndex);
   }
 }

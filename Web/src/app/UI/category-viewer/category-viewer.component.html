@@ -12,7 +12,7 @@
     <div *ngIf="this.editingHabits == false" class="mt-5" style="position: relative; display: grid; grid-template-columns: 80% 20%;">
         <div class="w-full h-full grid place-items-center">
             <div *ngIf="this.category.habits.length > 0" class="w-full h-full pr-3" style="display: grid; grid-template-rows: auto max-content;">
-                <div class="w-full h-full text-5xl font-bold bg-slate-100 grid place-content-center">
+                <div class="w-full h-full text-4xl font-bold bg-slate-100 grid place-content-center">
                     <h2>{{this.category.habits[this.category.currentHabitIndex].id}}</h2>
                 </div>
 
@@ -54,7 +54,7 @@
                 <div *cdkDragPlaceholder class="h-14 w-full mb-5"></div>
             </div>
             
-            <button class="btn w-full h-5 text-lg" (click)="this.AddHabit()">
+            <button class="btn w-full h-5 text-lg mb-5" (click)="this.AddHabit()">
                 Add Habit
             </button>
         </div>

@@ -197,10 +197,7 @@ export class AppComponent {
         const intersectionPoint = intersects[0].point;
         
         //round x and z coordaintes to the nearest square
-        let [x, z] = [intersectionPoint.x, intersectionPoint.z];
-        x -= 2.5; z -= 2.5;
-        x = this.data.RoundToNearestMultiple(x, 5); z = this.data.RoundToNearestMultiple(z, 5);
-        x += 2.5; z += 2.5;
+        let [x, z] = this.data.RoundPositionToNearestGridCell(intersectionPoint.x, intersectionPoint.z);
 
         try {
           this.data.AddCategory(name, { x: x, z: z });
@@ -228,13 +225,27 @@ export class AppComponent {
       this.raycaster.setFromCamera(pointer, this.camera);
       const intersects = this.raycaster.intersectObjects(this.scene.children, false);
 
-      if (intersects.length == 0 || intersects[0].object.name == "plane") {
+      if (intersects.length == 0) {
         return;
       }
 
-      //open popup screen with this category
-      const categoryID = intersects[0].object.name;
-      this.GoToCategory(categoryID);
+      if (intersects[0].object.name != "plane") { //clicked on a tree
+        //open popup screen with this category
+        const categoryID = intersects[0].object.name;
+        this.GoToCategory(categoryID);
+      }
+      else { //otherwise, round the position to the nearest grid cell and check if there is a tree at that position
+        const point = intersects[0].point;
+        let [x, z] = this.data.RoundPositionToNearestGridCell(point.x, point.z);
+        
+        //go through categories and check for a tree at this position
+        for (const category of this.data.userData.categories) {
+          const tree = category.tree;
+          if (tree.position.x == x && tree.position.z == z) {
+            this.GoToCategory(category.id);
+          }
+        }
+      }
     }
   }
   

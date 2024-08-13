@@ -13,6 +13,7 @@ body {
     url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/right.png),
     url(https://sirsakisan101.provenreviews.com/wp-content/uploads/2019/01/sunsetbgbottom.png),
     -webkit-linear-gradient(bottom, rgb(255,203,112) 0%, rgb(107,138,169) 30%, rgb(1,44,87) 100%);
+    background-color: rgb(1,44,87);
 
     -webkit-background-size: cover;
     -moz-background-size: cover;
