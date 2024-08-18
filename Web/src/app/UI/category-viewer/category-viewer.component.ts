@@ -55,6 +55,9 @@ export class CategoryViewerComponent implements OnInit {
     this.data.SaveData();
   }
 
+  SkipHabit() {
+    this.data.SkipHabit(this.category.id);
+  }
   CompleteHabit() {
     const description = prompt("What did you do?");
     if (description == undefined || description.replace(" ", "") == "") {

@@ -243,6 +243,17 @@ export class DataServiceService {
     }
   }
 
+  SkipHabit(categoryID: string) {
+    try {
+      //increment habit counter by 1; later can add a feature where this impairs the next habit's reward
+      const category = this.userData.categories[this.GetCategoryIndex(categoryID)];
+      category.currentHabitIndex = (category.currentHabitIndex + 1) % category.habits.length;
+      this.SaveData();
+    }
+    catch (categoryError) {
+      console.log(categoryError);
+    }
+  }
   CompleteHabit(categoryID: string, description: string) {
     try {
       const category = this.userData.categories[this.GetCategoryIndex(categoryID)];
