@@ -13,7 +13,7 @@ export class AppComponent {
   title = 'Web';
 
   scene!: THREE.Scene;
-  camera!: THREE.Camera;
+  camera!: THREE.PerspectiveCamera;
   renderer!: THREE.WebGLRenderer;
   raycaster!: THREE.Raycaster;
 
@@ -25,7 +25,6 @@ export class AppComponent {
     });
 
     this.communication.deleteCategoryEvent.subscribe((categoryID) => {
-      console.log('recived event');
       this.DeleteCategory(categoryID);
     });
   }
@@ -33,6 +32,13 @@ export class AppComponent {
   ngAfterViewInit() {
     this.InitTHREE();
     this.InitView();
+    window.addEventListener("resize", () => { //to resize renderer when window resizes
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setPixelRatio(window.devicePixelRatio);
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      animate();
+    })
 
     this.data.RetrieveData();
     this.InitTrees(this.data.userData.categories);
@@ -175,6 +181,9 @@ export class AppComponent {
 
     return mesh;
   }
+  DeleteTree(treeID: string) {
+    this.scene.remove(this.scene.getObjectByName(treeID)!);
+  }
 
   NewTree() {
     //get name of tree from user
@@ -287,7 +296,7 @@ export class AppComponent {
 
     //get tree position and show tree death animation
     this.data.DeleteCategory(categoryID);
-    this.InitTrees(this.data.userData.categories); //temporary solution while there is no animation for removing the tree
+    this.DeleteTree(categoryID); //temporary solution while there is no animation for removing the tree
   }
 
   GoToHistory() {
