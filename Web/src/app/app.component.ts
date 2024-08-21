@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import * as THREE from 'three';
-import { DataServiceService, Category, Tree, Habit, Log, UserData } from './data-service.service';
 import { Router } from '@angular/router';
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
+import { DataServiceService, Category, Tree, Habit, Log, UserData } from './data-service.service';
 import { CommunicationService } from './communication.service';
+import { ModelsService } from './Models/models.service';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,7 @@ export class AppComponent {
   renderer!: THREE.WebGLRenderer;
   raycaster!: THREE.Raycaster;
 
-  constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router) {}
+  constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router, private models: ModelsService) {}
 
   ngOnInit() {
     this.communication.completedHabitEvent.subscribe((data) => {
@@ -55,6 +57,10 @@ export class AppComponent {
       this.renderer.render(this.scene, this.camera);
     }
     this.renderer.setAnimationLoop(animate);
+    
+    setTimeout(() => {
+      location.reload(); //reload after a day
+    }, 86400000)
   }
 
   InitTHREE() {
@@ -64,7 +70,8 @@ export class AppComponent {
 
     this.renderer = new THREE.WebGLRenderer({ //renderer setup
       canvas: document.getElementById("canvas")!,
-      alpha: true
+      alpha: true,
+      antialias: true
     });
     this.renderer.setSize( window.innerWidth, window.innerHeight );
     this.renderer.shadowMap.enabled = true;
@@ -79,7 +86,7 @@ export class AppComponent {
 
   InitView() {
     //Initiaising plane
-    const geometry = new THREE.BoxGeometry( 20, 4, 20 );
+    const geometry = new RoundedBoxGeometry( 20, 4, 20, 10, 0.3 );
     const material = new THREE.MeshStandardMaterial( { color: 0x333333 } );
     const plane = new THREE.Mesh( geometry, material );
     plane.receiveShadow = true;
@@ -101,7 +108,7 @@ export class AppComponent {
     this.scene.add(ambientLight);
 
     const pointLight = new THREE.PointLight(0xffffff, 10000);
-    pointLight.position.set(10, 50, 10);
+    pointLight.position.set(20, 50, 15);
     pointLight.castShadow = true;
     this.scene.add(pointLight);
   }
@@ -116,7 +123,7 @@ export class AppComponent {
     element.style.opacity = "0";
   }
 
-  InitTrees(categories: Category[]) {
+  async InitTrees(categories: Category[]) {
     //'plant' a tree at its specified position on the plane
     //plane dimensions: 20x4x20 centered at origin
 
@@ -124,7 +131,7 @@ export class AppComponent {
       const tree = category.tree;
 
       //extract model for tree with specified type, hydration and growth
-      const mesh = this.GetTreeModel(tree);
+      const mesh = await this.models.GetTreeModel(tree);
       mesh.name = category.id;
       this.scene.add(mesh);
 
@@ -134,52 +141,6 @@ export class AppComponent {
       const height = boundingBox.max.y - boundingBox.min.y;
       mesh.position.set(tree.position.x, 0.5 * (4 + height), tree.position.z);
     }
-  }
-  GetTreeModel(tree: Tree): THREE.Mesh {
-    //we don't currently have access to the models, so just return green boxes of varying sizes with different colours to represent hydration
-
-    //the tree model should fit within a 5x20x5 square
-    const colour = (tree.hydration <= 15) ? 0xc4a84b : 0x49c94f;
-    const material = new THREE.MeshStandardMaterial({ color: colour });
-
-    //oak has 8 growth levels and is the only supported type currently
-    let dimensions = [0, 0, 0];
-    switch (tree.growthLevel) {
-      case 1:
-        dimensions = [0.5, 2, 0.5]
-        break;
-      case 2:
-        dimensions = [1, 3, 1]
-        break;
-      case 3:
-        dimensions = [1.5, 5, 1.5]
-        break;
-      case 4:
-        dimensions = [2, 8, 2]
-        break;
-      case 5:
-        dimensions = [2.5, 10, 2.5]
-        break;
-      case 6:
-        dimensions = [3, 12, 3]
-        break;
-      case 7:
-        dimensions = [3.5, 15, 3.5]
-        break;
-      case 8:
-        dimensions = [4.5, 19, 4.5]
-        break;
-      default:
-        break
-    }
-
-    const geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
-    const mesh = new THREE.Mesh(geometry, material);
-
-    mesh.receiveShadow = true;
-    mesh.castShadow = true;
-
-    return mesh;
   }
   DeleteTree(treeID: string) {
     this.scene.remove(this.scene.getObjectByName(treeID)!);
