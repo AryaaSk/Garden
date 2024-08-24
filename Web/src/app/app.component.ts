@@ -127,19 +127,37 @@ export class AppComponent {
     //'plant' a tree at its specified position on the plane
     //plane dimensions: 20x4x20 centered at origin
 
+    //need to give the category id as the name for every geometry within the group, as raycaster can only detect the specific geometry clicked
+    function AssignNameAndShadowGroup(group: any, name: string) {
+      const children = group.children;
+      if (children == undefined) {
+        return;
+      }
+      for (const child of children) {
+        child.name = name;
+        child.receiveShadow = true;
+        child.castShadow = true;
+        AssignNameAndShadowGroup(child, name);
+      }
+    }
+
     for (const category of categories) {
       const tree = category.tree;
 
       //extract model for tree with specified type, hydration and growth
       const mesh = await this.models.GetTreeModel(tree);
-      mesh.name = category.id;
+      console.log(mesh)
+      if (mesh.type == "Group") {
+        AssignNameAndShadowGroup(mesh, category.id)
+      }
+      else {
+        mesh.name = category.id;
+      }
       this.scene.add(mesh);
 
-      //position mesh; y-coordinate is determined by offseting mesh by half it's height and the half the height of the plane
-      const boundingBox = new THREE.Box3();
-      boundingBox.setFromObject(mesh);
-      const height = boundingBox.max.y - boundingBox.min.y;
-      mesh.position.set(tree.position.x, 0.5 * (4 + height), tree.position.z);
+      //3D model's mesh is centered above y-plane, so we only need to offset the model to clear the plane
+      mesh.position.set(tree.position.x, 2, tree.position.z);
+      //mesh.position.set(10, 2, 10); //should put mesh in bottom-right corner
     }
   }
   DeleteTree(treeID: string) {
@@ -162,7 +180,7 @@ export class AppComponent {
       const pointer = this.ConvertClientCoordinatesToVector($e.clientX, $e.clientY);
       this.raycaster.setFromCamera(pointer, this.camera);
       const intersects = this.raycaster.intersectObjects(this.scene.children, false);
-      
+
       if (intersects.length > 0 && intersects[0].object.name == "plane") {
         const intersectionPoint = intersects[0].point;
         
@@ -189,11 +207,12 @@ export class AppComponent {
 
   InitTreeListeners() {
     const canvas = document.getElementById("canvas")!;
+
     canvas.onclick = ($e) => {
       //check if user clicked a tree (i.e. didn't click the ground, since that is the only other object)
       const pointer = this.ConvertClientCoordinatesToVector($e.clientX, $e.clientY);
       this.raycaster.setFromCamera(pointer, this.camera);
-      const intersects = this.raycaster.intersectObjects(this.scene.children, false);
+      const intersects = this.raycaster.intersectObjects(this.scene.children, true);
 
       if (intersects.length == 0) {
         return;
@@ -202,6 +221,7 @@ export class AppComponent {
       if (intersects[0].object.name != "plane") { //clicked on a tree
         //open popup screen with this category
         const categoryID = intersects[0].object.name;
+        console.log(intersects[0].object)
         this.GoToCategory(categoryID);
       }
       else { //otherwise, round the position to the nearest grid cell and check if there is a tree at that position

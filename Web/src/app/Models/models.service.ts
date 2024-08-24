@@ -17,10 +17,32 @@ export class ModelsService {
   }
 
   async GetTreeModel(tree: Tree): Promise<THREE.Group<THREE.Object3DEventMap> | THREE.Mesh<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.Material | THREE.Material[], THREE.Object3DEventMap>> {
+    //how to create 3D models
+    //https://web.blockbench.net
+    //create a new project
+    //create cube, use dimensions 1x1x1 and set position to (0, 1, 0); this is the base cube
+    //duplicate this cube and place above base cube to start building models
+    //export model to gltf and import via this function
+
     const loader = new GLTFLoader();
 
-    if (tree.growthLevel == 0) { //3D models not ready yet
-      const group = await this.LoadModel(loader, "/assets/3DModels/stage1.glb");
+    //different tree models have different scales
+    //scales[index] = x,y,z scale
+    const scales = [
+      0,
+      7,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ];
+    const scale = scales[tree.growthLevel];
+
+    if (tree.growthLevel == 1) {
+      const group = await this.LoadModel(loader, "/assets/3DModels/GardenOakTree1-8.glb");
+      group.scale.set(scale, scale, scale);
       return group;
     }
     else {
