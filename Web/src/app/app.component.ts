@@ -19,6 +19,12 @@ export class AppComponent {
   renderer!: THREE.WebGLRenderer;
   raycaster!: THREE.Raycaster;
 
+  //Seemed to figure out what causes occasional 'WebGL Context Lost' on iOS in 'PWA' mode
+  //Occurs whenever another app has a webview open, e.g. in my case Octal to view HackerNews articles
+  //perhaps iOS doesn't allow multiple webviews to access the GPU at once?
+
+  //apparently issue will be resolved by updating iOS to latest version.
+
   constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router, private models: ModelsService) {}
 
   ngOnInit() {
