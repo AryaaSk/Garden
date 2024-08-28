@@ -24,6 +24,8 @@ export class ModelsService {
     //duplicate this cube and place above base cube to start building models
     //export model to gltf and import via this function
 
+    //to fix repeating texture problem, need to remove doubleSided: true attribute from .gltf file
+
     const loader = new GLTFLoader();
 
     //different tree models have different scales
@@ -40,8 +42,10 @@ export class ModelsService {
     ];
     const scale = scales[tree.growthLevel];
 
+    //oak: #a93900
+
     if (tree.growthLevel == 1) {
-      const group = await this.LoadModel(loader, "/assets/3DModels/GardenOakTree1-8.glb");
+      const group = await this.LoadModel(loader, "/assets/3DModels/Oak/GardenOak1.gltf");
       group.scale.set(scale, scale, scale);
       return group;
     }
