@@ -5,6 +5,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { DataServiceService, Category, Tree, Habit, Log, UserData } from './data-service.service';
 import { CommunicationService } from './communication.service';
 import { ModelsService } from './Models/models.service';
+import { QuotesService } from './quotes.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent {
 
   //apparently issue will be resolved by updating iOS to latest version.
 
-  constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router, private models: ModelsService) {}
+  constructor(private data: DataServiceService, private communication: CommunicationService, private router: Router, private models: ModelsService, private quotes: QuotesService) {}
 
   ngOnInit() {
     this.communication.completedHabitEvent.subscribe((data) => {
@@ -135,14 +136,14 @@ export class AppComponent {
 
     //need to give the category id as the name for every geometry within the group, as raycaster can only detect the specific geometry clicked
     function AssignNameAndShadowGroup(group: any, name: string) {
+      group.name = name;
+      group.receiveShadow = true;
+      group.castShadow = true;
       const children = group.children;
       if (children == undefined) {
         return;
       }
       for (const child of children) {
-        child.name = name;
-        child.receiveShadow = true;
-        child.castShadow = true;
         AssignNameAndShadowGroup(child, name);
       }
     }
@@ -152,10 +153,10 @@ export class AppComponent {
 
       //extract model for tree with specified type, hydration and growth
       const mesh = await this.models.GetTreeModel(tree);
-      console.log(mesh)
       if (mesh.type == "Group") {
         AssignNameAndShadowGroup(mesh, category.id)
       }
+
       else {
         mesh.name = category.id;
       }
@@ -167,7 +168,11 @@ export class AppComponent {
     }
   }
   DeleteTree(treeID: string) {
-    this.scene.remove(this.scene.getObjectByName(treeID)!);
+    const object = this.scene.getObjectByName(treeID)!;
+    for (const child of object.children) {  
+      this.scene.remove(child);
+    }
+    this.scene.remove(object);
   }
 
   NewTree() {
@@ -193,15 +198,18 @@ export class AppComponent {
         //round x and z coordaintes to the nearest square
         let [x, z] = this.data.RoundPositionToNearestGridCell(intersectionPoint.x, intersectionPoint.z);
 
-        try {
-          this.data.AddCategory(name, { x: x, z: z });
-          this.InitTrees(this.data.userData.categories);
-
-          //open category viewer for this tree
-          this.GoToCategory(name);
-        }
-        catch (error) {
-          console.log(error); //user may try to place tree in same position as another tree
+        //check whether the given x and z are the bounds of the plane
+        if (!(x < -10 || x > 10 || z < -10 || z > 10)) {
+          try {
+            this.data.AddCategory(name, { x: x, z: z });
+            this.InitTrees(this.data.userData.categories);
+  
+            //open category viewer for this tree
+            this.GoToCategory(name);
+          }
+          catch (error) {
+            console.log(error); //user may try to place tree in same position as another tree
+          }
         }
       }
 
@@ -321,5 +329,11 @@ export class AppComponent {
 
       resolve(undefined);
     })
+  }
+
+
+
+  GetQuote() {
+    return this.quotes.GetQuote();
   }
 }

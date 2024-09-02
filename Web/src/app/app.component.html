@@ -15,6 +15,11 @@
 
   <h1 id="instruction" style="position: absolute; top: 150px; left: 0px; right: 0px; color: white; text-align: center; font-size: xx-large; font-weight: bold; transition: 200ms;"></h1>
 
+  <div id="quote" class="glass" style="position: absolute; top: 150px; left: 50px; right: 50px; height: auto; padding: 10px; display: grid; place-content: center; color: white; text-align: center; font-size: large; font-weight: bold; border-radius: 10px;">
+    {{this.GetQuote()}}
+  </div>
+
+
   <dialog id="popup" class="modal">
     <div class="modal-box h-3/4 rounded-xl">
       <router-outlet></router-outlet>
