@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DataServiceService } from './data-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -111,12 +110,12 @@ export class QuotesService {
     "Sometimes later becomes never. Do it now."
   ];
 
-  constructor(private data: DataServiceService) { }
+  constructor() { }
 
   GetQuote() {
     //one quote per day, need to use the date as a seed 
     const unixTimeMS = Date.now();
-    const seed = this.data.RoundUpToNearestMultiple(unixTimeMS, 84600*1000);
+    const seed = unixTimeMS / 84600*1000; //to get +1 every day
 
     const index = seed % 100;
     return this.quotes[index];
