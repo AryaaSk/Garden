@@ -34,8 +34,8 @@ export class ModelsService {
       0,
       7,
       10,
+      9,
       10,
-      1,
       1,
       1,
       1
@@ -44,32 +44,41 @@ export class ModelsService {
 
     //oak: #a93900
     //tree: #35e652
+    //dehydrated: #ecff73
 
-    let fileName = "";
+    let normalFileName = "";
+    let dehydratedFileName = "";
 
     switch (tree.growthLevel) {
       case 1:
-        fileName = "/assets/3DModels/Oak/GardenOak1.gltf"
+        normalFileName = "/assets/3DModels/Oak/GardenOak1.gltf"
+        dehydratedFileName = "/assets/3DModels/Oak/Oak1Dehydrated.gltf";
         break
       case 2:
-        fileName = "/assets/3DModels/Oak/Oak2.gltf"
+        normalFileName = "/assets/3DModels/Oak/Oak2.gltf"
+        dehydratedFileName = "/assets/3DModels/Oak/Oak2Dehydrated.gltf";
         break;
       case 3:
-        fileName = "/assets/3DModels/Oak/Oak3.gltf"
+        normalFileName = "/assets/3DModels/Oak/Oak4.gltf"
+        dehydratedFileName = "/assets/3DModels/Oak/Oak4Dehydrated.gltf";
+        break;
+      case 4:
+        normalFileName = "/assets/3DModels/Oak/Oak3.gltf"
+        dehydratedFileName = "/assets/3DModels/Oak/Oak3Dehydrated.gltf";
         break;
 
       default:
         break;
     }
     
-    if (tree.growthLevel <= 3) {
-      const group = await this.LoadModel(loader, fileName);
+    if (tree.growthLevel <= 4) {
+      const group = await this.LoadModel(loader, tree.hydration >= 30 ? normalFileName : dehydratedFileName);
       group.scale.set(scale, scale, scale);
       return group;
     }
 
     //the tree model should fit within a 5x20x5 square
-    const colour = (tree.hydration <= 15) ? 0xc4a84b : 0x49c94f;
+    const colour = (tree.hydration < 30) ? 0xc4a84b : 0x49c94f;
     const material = new THREE.MeshStandardMaterial({ color: colour });
 
     //oak has 8 growth levels and is the only supported type currently
